@@ -10,15 +10,19 @@ const pack = require('./../package.json');
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  app.connectMicroservice({
-    transport: Transport.TCP,
-    options: {
-      urls: [configService.getBrockerUri()],
-      queue: pack.name,
-      queueOptions: { durable: false },
+  app.connectMicroservice(
+    {
+      transport: Transport.RMQ,
+      options: {
+        urls: [configService.getBrockerUri()],
+        queue: pack.name,
+        queueOptions: { durable: false },
+      },
     },
-  });
+    { inheritAppConfig: true },
+  );
 
+  await app.startAllMicroservices();
   await app.listen(configService.getPort());
 }
 bootstrap();
