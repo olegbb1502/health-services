@@ -11,7 +11,7 @@ async function bootstrap() {
   app.enableCors();
 
   app.connectMicroservice({
-    transport: Transport.TCP,
+    transport: Transport.RMQ,
     options: {
       urls: [process.env.BROCKER_URI],
       queue: pack.name,

@@ -14,7 +14,7 @@ import { UserService } from './user.service';
           transport: Transport.RMQ,
           options: {
             urls: [process.env.BROCKER_URI],
-            queue: 'user_service',
+            queue: 'user-service',
             queueOptions: { durable: false },
           },
         }),
