@@ -4,10 +4,11 @@ import { RpcException } from '@nestjs/microservices';
 import { Repository } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 
+import { AuthService } from '../auth/auth.service';
+
 import { UserDTO } from './dto';
 import { User } from '../../entities/user.entity';
 import { Role } from '../../entities/role.entity';
-import { AuthService } from '../auth/auth.service';
 
 @Injectable()
 export class UserService {
@@ -49,7 +50,6 @@ export class UserService {
       member_id: user.id,
       role_id: user.role_id,
     });
-    return {};
   }
 
   async findAllUsers() {
