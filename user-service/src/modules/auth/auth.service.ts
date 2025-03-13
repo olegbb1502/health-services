@@ -3,6 +3,7 @@ import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { RpcException } from '@nestjs/microservices';
 import { TokenPayload, Tokens } from './dto';
+
 @Injectable()
 export class AuthService {
   constructor(
@@ -13,12 +14,12 @@ export class AuthService {
   async generateTokens(payload: TokenPayload): Promise<Tokens> {
     const [accessToken, refreshToken] = await Promise.all([
       this.jwtService.sign(payload, {
-        secret: this.configService.get<string>('JWT_ACCESS_SECRET'),
+        secret: this.configService.get<string>('JWT_SECRET') || 'very%s1Cr3t',
         expiresIn:
-          this.configService.get<string>('JWT_ACCESS_EXPIRATION') || '15m',
+          this.configService.get<string>('JWT_ACCESS_EXPIRATION') || '1d',
       }),
       this.jwtService.sign(payload, {
-        secret: this.configService.get<string>('JWT_REFRESH_SECRET'),
+        secret: this.configService.get<string>('JWT_SECRET') || 'very%s1Cr3t',
         expiresIn:
           this.configService.get<string>('JWT_REFRESH_EXPIRATION') || '7d',
       }),
@@ -33,7 +34,7 @@ export class AuthService {
   async verifyAccessToken(token: string): Promise<TokenPayload> {
     try {
       return this.jwtService.verify(token, {
-        secret: this.configService.get<string>('JWT_ACCESS_SECRET'),
+        secret: this.configService.get<string>('JWT_SECRET') || 'very%s1Cr3t',
       });
     } catch (error) {
       throw new RpcException(error);
@@ -43,7 +44,7 @@ export class AuthService {
   async verifyRefreshToken(token: string): Promise<TokenPayload> {
     try {
       return this.jwtService.verify(token, {
-        secret: this.configService.get<string>('JWT_REFRESH_SECRET'),
+        secret: this.configService.get<string>('JWT_SECRET') || 'very%s1Cr3t',
       });
     } catch (error) {
       throw new RpcException(error);

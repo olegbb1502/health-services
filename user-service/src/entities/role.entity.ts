@@ -1,12 +1,5 @@
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  OneToMany,
-  BeforeInsert,
-} from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
 import { User } from './user.entity';
-import { v4 as uuidv4 } from 'uuid';
 
 @Entity('roles')
 export class Role {
@@ -21,9 +14,4 @@ export class Role {
 
   @OneToMany(() => User, (user) => user.role)
   users: User[];
-
-  @BeforeInsert()
-  generateUUID() {
-    this.id = uuidv4();
-  }
 }

@@ -1,3 +1,5 @@
+import { Role } from 'src/entities/role.entity';
+import { User } from 'src/entities/user.entity';
 import { DataSource } from 'typeorm';
 import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions';
 
@@ -12,21 +14,18 @@ export const typeOrmModuleOptions: PostgresConnectionOptions = {
   cache: false,
   database: dbName,
   logging: ['warn', 'error'],
-  // logging: true,
-  ssl: process.env.SSL_MODE === 'true' ? { rejectUnauthorized: false } : false,
-  synchronize: false,
+  synchronize: true,
 };
 
 // used from console
-const appDataSource = new DataSource({
-  ...typeOrmModuleOptions,
-  migrationsTableName: 'migrations',
-  migrations: [__dirname + '/../../../migrations/*.{js,ts}'],
-  entities: [__dirname + '/../../../entities/*.entity.{js,ts}'],
-  migrationsRun: true,
-});
+// const appDataSource = new DataSource({
+//   ...typeOrmModuleOptions,
+//   entities: [__dirname + '/../entities/*.entity.{ts,js}'],
+//   migrations: [__dirname + '/../../../migrations/*.{js,ts}'],
+//   migrationsRun: true,
+// });
 
-(async () => {
-  await appDataSource.initialize();
-})();
-export default appDataSource;
+// (async () => {
+//   await appDataSource.initialize();
+// })();
+// export default appDataSource;

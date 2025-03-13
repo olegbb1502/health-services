@@ -4,6 +4,7 @@ import { MessagePattern } from '@nestjs/microservices';
 import { UserService } from './user.service';
 import { UserDTO } from './dto';
 import { patterns } from '../patterns';
+
 @Controller('user')
 export class UserController {
   private readonly logger = new Logger(UserController.name);

@@ -1,11 +1,19 @@
-import { Controller, Logger, Post, Body, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Logger,
+  Post,
+  Body,
+  UseGuards,
+  Get,
+  Request,
+} from '@nestjs/common';
 import { AuthGuard } from '../../guards/auth.guard';
 
 import { UserService } from './user.service';
 import { User } from './dto';
 
 @Controller('user')
-@UseGuards(AuthGuard)
+// @UseGuards(AuthGuard)
 export class UserController {
   private readonly logger = new Logger(UserController.name);
 

@@ -5,14 +5,16 @@ import { Repository } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 
 import { UserDTO } from './dto';
-import { User } from '../../entity/user.entity';
-import { Role } from '../../entity/role.entity';
+import { User } from '../../entities/user.entity';
+import { Role } from '../../entities/role.entity';
+import { AuthService } from '../auth/auth.service';
 
 @Injectable()
 export class UserService {
   private readonly logger = new Logger(UserService.name);
 
   constructor(
+    private readonly authService: AuthService,
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
     @InjectRepository(Role)
@@ -26,7 +28,7 @@ export class UserService {
 
     const roleEntity = await this.roleRepository.findOneBy({ name: role });
     if (!roleEntity) {
-      throw new NotFoundException(`Role ${role} not found`);
+      throw new RpcException(`Role ${role} not found`);
     }
 
     // Remove role from userData and only use role_id
@@ -36,12 +38,18 @@ export class UserService {
       password: userPassword,
     };
 
-    const user = this.userRepository.create({
+    const $user = this.userRepository.create({
       ...userData,
       role_id: roleEntity.id,
     });
 
-    return this.userRepository.save(user);
+    const user = await this.userRepository.save($user);
+
+    return this.authService.generateTokens({
+      member_id: user.id,
+      role_id: user.role_id,
+    });
+    return {};
   }
 
   async findAllUsers() {
@@ -63,6 +71,7 @@ export class UserService {
       throw new NotFoundException(`Role ${dto.role} not found`);
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { role: _, ...updateData } = dto;
     return this.userRepository.save({
       ...user,

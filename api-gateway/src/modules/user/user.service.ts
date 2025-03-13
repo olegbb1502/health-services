@@ -13,7 +13,7 @@ export class UserService {
     @Inject('USER_SERVICE') private readonly userClient: ClientProxy,
   ) {}
 
-  private send(pattern: any, data: any): Promise<any> {
+  private send(pattern: any, data: any): Promise<unknown> {
     const res$ = this.userClient.send(pattern, data).pipe(
       timeout(30000),
       catchError((e: Error) => {
@@ -21,7 +21,6 @@ export class UserService {
         return throwError(() => e);
       }),
     );
-
     return firstValueFrom(res$);
   }
 
